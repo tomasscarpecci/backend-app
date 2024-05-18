@@ -17,6 +17,10 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+app.get('/example', (req, res) => {
+  res.send('Hello example!');
+});
+
 // USER CONTROLLER
 
 app.get('/user',  (request, response) => {

@@ -17,12 +17,13 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+// USER CONTROLLER
+
 app.get('/user',  (request, response) => {
   const users = userService.getUsers();
   response.json(users);
 })
 
-// USER CONTROLLER
 app.post('/user', (request, response) => {
   const userBody = request.body;
   const user: User = new User(userBody.firstName, userBody.lastName)

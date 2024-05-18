@@ -13,7 +13,7 @@ export class UserService {
   }
 
   updateUser(user:any) {
-    console.log("Editando un usuario  " + user.name);
+    //console.log("Editando un usuario  " + user.name);
   }
 
   getUsers() {

@@ -26,7 +26,7 @@ app.get('/user',  (request, response) => {
 
 app.post('/user', (request, response) => {
   const userBody = request.body;
-  const user: User = new User(userBody.firstName, userBody.lastName)
+  const user: User = new User(userBody.firstName, userBody.lastName, userBody.nickName)
   console.log('user', );
   userService.createUser(user);
   response.json(user)

@@ -1,6 +1,7 @@
 import express, { response } from 'express';
 import { UserService } from './services/UserService'
 import { User } from './entities/User';
+import { request } from 'http';
 
 const app = express();
 const port = 3000;
@@ -42,11 +43,30 @@ app.post('/user', (request, response) => {
   response.json(user);
 })
 
-app.put('/user', (request, response) => {
-   const user = request.body;
-  userService.updateUser(user);
-  response.json(user);
-})
+app.put('/user/:id', (request, response) => {
+  const id = +request.params.id;
+  const userIndex = userService.getUserIndex(id);
+  if (userIndex == -1){
+    response.json('No lo encontre')
+  }
+  const input = {id, firstName: request.body.firstName, lastName: request.body.lastName, nickName: request.body.nickName}
+  const userUpdated = userService.putUser(userIndex, input)
+  response.json(userUpdated)
+  
+} )
+
+app.patch('/user/:id', (request, response) => {
+  const id = +request.params.id;
+  const userIndex = userService.getUserIndex(id);
+  if (userIndex == -1){
+    response.json('No lo encontre')
+  }
+  //const input = {id, firstName: request.body.firstName, lastName: request.body.lastName, nickName: request.body.nickName}
+  const userUpdated = userService.updateUser(userIndex, request.body)
+  response.json(userUpdated)
+  
+} )
+
 
 app.delete('/user/:id', (request, response) => {
   const id = +request.params.id;

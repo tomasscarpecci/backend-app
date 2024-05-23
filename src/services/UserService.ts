@@ -5,10 +5,10 @@ import { User } from "../entities/User";
 export class UserService {
 
   private users: User[] = [
-  { firstName: "tomi", lastName: "Vuelta", nickName:"toto", id: 1},
-  { firstName: "tomi 2", lastName: "Vuelta 2",nickName:"toto", id: 2},
-  { firstName: "tomi 3", lastName: "Vuelta 3",nickName:"toto", id: 3},
-  { firstName: "tomi 4", lastName: "Vuelta 4",nickName:"toto", id: 4}
+  { Nombre: "Tomas", Apellido: "Vuelta", Mail:"tomivuelta@gmail.com", id: 1},
+  { Nombre: "Tomas", Apellido: "Scarpecci",Mail:"tomiscarpecci@gmail.com", id: 2},
+  { Nombre: "Jazmin", Apellido: "Aquilante",Mail:"jazaquilante@gmail.com", id: 3},
+  { Nombre: "Juan", Apellido: "Perez",Mail:"jperz@gmail.com", id: 4}
   ];
   private lastIdGenerated: number = this.users.length;
 
@@ -46,7 +46,7 @@ export class UserService {
   getUser(userId: number){
     const user = this.users.find((user) => { return user.id === userId });
     if (!user) {
-      return 'no lo encontre';
+      return 'Usuario NO encontrado';
     } {
       return user;
     }
@@ -56,9 +56,9 @@ export class UserService {
     const userIndex = this.users.findIndex((user) => { return user.id === userId });
     if (userIndex > -1) {
       this.users.splice(userIndex, 1);
-      return 'usuario eliminado con éxito';
+      return 'Usuario eliminado con éxito';
     } {
-      return 'no lo encontre';
+      return 'Usuario NO encontrado';
     }
   }
 }

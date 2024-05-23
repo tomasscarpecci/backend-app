@@ -24,10 +24,14 @@ app.get('/example', (req, res) => {
 
 // USER CONTROLLER
 
+// METODO GET --> Obtener listado de usuarios
+
 app.get('/user',  (request, response) => {
   const users = userService.getUsers();
   response.json({message:'Listado de Usuarios',users});
 })
+
+// METODO GET ONE --> Obtener un usuario con id = :id
 
 app.get('/user/:id', (request, response) => {
   const id = +request.params.id;
@@ -35,13 +39,17 @@ app.get('/user/:id', (request, response) => {
   response.json(result);
 })
 
+//METODO POST --> Crear nuevos usuarios
+
 app.post('/user', (request, response) => {
   const userBody = request.body;
-  const user: User = new User(userBody.firstName, userBody.lastName, userBody.nickName)
+  const user: User = new User(userBody.Nombre, userBody.Apellido, userBody.Mail)
   console.log('user', );
   userService.createUser(user);
   response.json(user);
 })
+
+//METODO PUT --> Modificar Usuario con id = :id (recurso completo e idempotente)
 
 app.put('/user/:id', (request, response) => {
   const id = +request.params.id;
@@ -49,11 +57,13 @@ app.put('/user/:id', (request, response) => {
   if (userIndex == -1){
     response.json('No lo encontre')
   }
-  const input = {id, firstName: request.body.firstName, lastName: request.body.lastName, nickName: request.body.nickName}
+  const input = {id, Nombre: request.body.Nombre, Apellido: request.body.Apellido, Mail: request.body.Mail}
   const userUpdated = userService.putUser(userIndex, input)
   response.json(userUpdated)
   
 } )
+
+//METODO PATCH --> Modificar Usuario con id = :id (recurso parcial)
 
 app.patch('/user/:id', (request, response) => {
   const id = +request.params.id;
@@ -61,18 +71,20 @@ app.patch('/user/:id', (request, response) => {
   if (userIndex == -1){
     response.json('No lo encontre')
   }
-  //const input = {id, firstName: request.body.firstName, lastName: request.body.lastName, nickName: request.body.nickName}
   const userUpdated = userService.updateUser(userIndex, request.body)
   response.json(userUpdated)
   
 } )
 
+//METODO DELETE --> Borrar Usuario con id = :id
 
 app.delete('/user/:id', (request, response) => {
   const id = +request.params.id;
   const result = userService.deleteUser(id);
   response.json(result);
 })
+
+
 // END USER CONTROLLER
 
 app.listen(port, () => {

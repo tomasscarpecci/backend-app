@@ -73,6 +73,7 @@ export class UserService {
       return 'Usuario NO encontrado';
     }
   }
+  
    hashString(plainText: string): string {
     const hash = createHash('sha256');
     hash.update(plainText);

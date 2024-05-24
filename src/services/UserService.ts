@@ -51,7 +51,6 @@ export class UserService {
     return this.users[userInd];
   }
 
-
   getUsers() {
     return this.users;
   }

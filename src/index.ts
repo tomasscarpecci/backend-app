@@ -43,7 +43,7 @@ app.get('/user/:id', (request, response) => {
 
 app.post('/user', (request, response) => {
   const userBody = request.body;
-  const user: User = new User(userBody.Nombre, userBody.Apellido, userBody.Mail)
+  const user: User = new User(userBody.Nombre, userBody.Apellido, userBody.Mail, userBody.Clave);
   console.log('user', );
   userService.createUser(user);
   response.json(user);
@@ -57,7 +57,7 @@ app.put('/user/:id', (request, response) => {
   if (userIndex == -1){
     response.json('No lo encontre')
   }
-  const input = {id, Nombre: request.body.Nombre, Apellido: request.body.Apellido, Mail: request.body.Mail}
+  const input = {id, Nombre: request.body.Nombre, Apellido: request.body.Apellido, Mail: request.body.Mail, Clave: request.body.Clave}
   const userUpdated = userService.putUser(userIndex, input)
   response.json(userUpdated)
   

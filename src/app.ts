@@ -1,5 +1,5 @@
 import express, { Application } from 'express';
-import userRoutes from './routes/UserRoutes';
+import userRoutes from './user/UserRoutes';
 
 export const configureApp = (app: Application): void => {
   // Middleware para parsear el body de las requests como JSON

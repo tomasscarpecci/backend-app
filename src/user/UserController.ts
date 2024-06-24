@@ -1,5 +1,5 @@
-import { User } from "../entities/User.js";
-import { UserService } from "../services/UserService.js";
+import { User } from "./UserEntity.js";
+import { UserService } from "../user/UserService.js";
 import { Request, Response } from 'express';
 
 /*

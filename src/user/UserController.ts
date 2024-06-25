@@ -1,6 +1,6 @@
 import { User } from "./UserEntity.js";
 import { UserService } from "../user/UserService.js";
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 /*
   En los Controllers se deben utilizar funciones flecha (arrow functions), porque dichas funciones
@@ -8,12 +8,28 @@ import { Request, Response } from 'express';
   con lo cual el "this" dentro del controller pierde el contexto si la funcion es una funcion convencional de javascript. (Para mas info, diferencias entre funciones y funciones flecha)
 */
 
+ 
+
 export default class UserController {
 
   private userService: UserService;
 
   constructor() {
     this.userService = new UserService();
+  }
+
+  //Middleware para sanetizar las entradas
+
+  public sanitizeUserInput = (req: Request, res: Response, next:NextFunction): void => {
+
+    req.body.sanitizedInput = { 
+      Nombre: req.body.Nombre, 
+      Apellido: req.body.Apellido, 
+      Mail: req.body.Mail, 
+      Clave: req.body.Clave
+      }
+
+      next()
   }
 
   public getAllUsers = (req: Request, res: Response): void => {
@@ -28,7 +44,7 @@ export default class UserController {
   }
 
   public createUser = (req: Request, res: Response): void => {
-    const userBody = req.body;
+    const userBody = req.body.sanitizedInput;
     const user: User = new User(userBody.Nombre, userBody.Apellido, userBody.Mail, userBody.Clave);
     console.log('user', );
     this.userService.createUser(user);
@@ -41,7 +57,7 @@ export default class UserController {
     if (userIndex == -1){
       res.json('No lo encontre')
     }
-    const input = {id, Nombre: req.body.Nombre, Apellido: req.body.Apellido, Mail: req.body.Mail, Clave: req.body.Clave}
+    const input = {id, ...req.body.sanitizedInput}
     const userUpdated = this.userService.putUser(userIndex, input)
     res.json(userUpdated)
   }
@@ -62,3 +78,10 @@ export default class UserController {
     res.json(userUpdated)
   }
 }
+
+//Lo de abajo, iba en el updateUser
+//const input = {id, Nombre: req.body.Nombre, Apellido: req.body.Apellido, Mail: req.body.Mail, Clave: req.body.Clave}
+
+//Lo de abajo, iba en el createUser
+//const userBody = req.body;
+//const user: User = new User(userBody.Nombre, userBody.Apellido, userBody.Mail, userBody.Clave);

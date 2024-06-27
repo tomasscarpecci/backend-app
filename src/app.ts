@@ -6,7 +6,7 @@ export const configureApp = (app: Application): void => {
   app.use(express.json());
   // Middleware para parsear el body de las requests con URL encoding
   app.use(express.urlencoded({ extended: true }));
-
+  
   // Configuración de rutas
   app.get('/', (req, res) => {
     res.send('Hello World!');
@@ -15,6 +15,6 @@ export const configureApp = (app: Application): void => {
   app.get('/example', (req, res) => {
     res.send('Hello example!');
   });
-  
+
   app.use('/users', userRoutes);
 };

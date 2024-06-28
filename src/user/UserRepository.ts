@@ -11,22 +11,22 @@ export class UserRepository implements Repository <User> {
   ];
   private lastIdGenerated: number = this.users.length;
 
-  public getAllUsers(): User[] | undefined {
-    return this.users
+  public async getAllUsers(): Promise<User[] | undefined> {
+    return await this.users
   }
 
-  public getUserById(id: number): User | undefined {
-    return this.users.find(user => user.id === id)
+  public async getUserById(id: number): Promise<User | undefined> {
+    return await this.users.find(user => user.id === id)
   }
 
-  public createUser(item: User): User | undefined {
+  public async createUser(item: User): Promise<User | undefined> {
     const newUser: User = { ...item, id: ++this.lastIdGenerated };
-    this.users.push(newUser);
+    await this.users.push(newUser);
     return newUser;
   }
 
-  public updateUser(id: number, item: User): User | undefined {
-    const userIndex = this.users.findIndex(user => user.id === id);
+  public async updateUser(id: number, item: User): Promise<User | undefined> {
+    const userIndex = await this.users.findIndex(user => user.id === id);
     if (userIndex === -1) {
       return undefined;
     }
@@ -35,8 +35,8 @@ export class UserRepository implements Repository <User> {
     return this.users[userIndex];
   }
 
-  public deleteUser(id: number): User | undefined {
-    const userIndex = this.users.findIndex(user => user.id === id);
+  public async deleteUser(id: number): Promise<User | undefined> {
+    const userIndex = await this.users.findIndex(user => user.id === id);
     if (userIndex === -1) {
       return undefined;
     }

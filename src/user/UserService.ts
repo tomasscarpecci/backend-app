@@ -12,30 +12,30 @@ export class UserService {
   this.userRepository = new UserRepository()
   }
 
-  createUser(user: User) {
+  async createUser(user: User) {
     const hashedText = this.hashString(user.Clave);
     user.Clave = hashedText;
-    const userNew = this.userRepository.createUser(user);
+    const userNew = await this.userRepository.createUser(user);
     return userNew
   }
   
-  putUser(userId: number, user: User ){
+  async putUser(userId: number, user: User ){
     user.id= userId;
     const password = this.hasValue(user.Clave);
     if (password){
       const hashedText = this.hashString(user.Clave);
       user.Clave = hashedText;
     }
-    return this.userRepository.updateUser(user.id,user);
+    return await this.userRepository.updateUser(user.id,user);
   }
 
-  getUsers() {
-    const users= this.userRepository.getAllUsers();
+  async getUsers() {
+    const users= await this.userRepository.getAllUsers();
     return users
   }
 
-  getUser(userId: number){
-    const user = this.userRepository.getUserById(userId);
+  async getUser(userId: number){
+    const user = await this.userRepository.getUserById(userId);
     if (!user) {
       return 'Usuario NO encontrado';
     } {
@@ -43,8 +43,8 @@ export class UserService {
     }
   }
 
-  deleteUser(userId: number) {
-    const userDeleted = this.userRepository.deleteUser(userId);
+  async deleteUser(userId: number) {
+    const userDeleted = await this.userRepository.deleteUser(userId);
     return userDeleted;
   }
   

@@ -1,7 +1,7 @@
 export interface Repository <T> {
-  getAllUsers(): T[]|undefined
-  getUserById(id: number): T|undefined
-  createUser(item: T): T|undefined
-  updateUser(id: number, item: T): T|undefined
-  deleteUser(id: number): T|undefined
+  getAllUsers(): Promise<T[]|undefined>
+  getUserById(id: number): Promise<T|undefined>
+  createUser(item: T): Promise<T|undefined>
+  updateUser(id: number, item: T): Promise<T|undefined>
+  deleteUser(id: number): Promise<T|undefined>
 }

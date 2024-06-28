@@ -12,11 +12,11 @@ export class UserRepository implements Repository <User> {
   private lastIdGenerated: number = this.users.length;
 
   public async getAllUsers(): Promise<User[] | undefined> {
-    return await this.users
+    return await this.users;
   }
 
   public async getUserById(id: number): Promise<User | undefined> {
-    return await this.users.find(user => user.id === id)
+    return await this.users.find(user => user.id === id);
   }
 
   public async createUser(item: User): Promise<User | undefined> {

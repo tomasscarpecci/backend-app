@@ -16,7 +16,7 @@ export class UserService {
     const hashedText = this.hashString(user.Clave);
     user.Clave = hashedText;
     const userNew = await this.userRepository.createUser(user);
-    return userNew
+    return userNew;
   }
   
   async putUser(userId: number, user: User ){
@@ -31,7 +31,7 @@ export class UserService {
 
   async getUsers() {
     const users= await this.userRepository.getAllUsers();
-    return users
+    return users;
   }
 
   async getUser(userId: number){

@@ -15,7 +15,7 @@ export class UserService {
   async createUser(user: User) {
     const hashedText = this.hashString(user.Clave);
     user.Clave = hashedText;
-    const userNew = await this.userRepository.createUser(user);
+    const userNew =await this.userRepository.createUser(user);
     return userNew;
   }
   
@@ -35,7 +35,7 @@ export class UserService {
   }
 
   async getUser(userId: number){
-    const user = await this.userRepository.getUserById(userId);
+    const user =await this.userRepository.getUserById(userId);
     if (!user) {
       return 'Usuario NO encontrado';
     } {

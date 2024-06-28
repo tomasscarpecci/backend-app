@@ -12,21 +12,21 @@ export class UserRepository implements Repository <User> {
   private lastIdGenerated: number = this.users.length;
 
   public async getAllUsers(): Promise<User[] | undefined> {
-    return await this.users;
+    return this.users;
   }
 
   public async getUserById(id: number): Promise<User | undefined> {
-    return await this.users.find(user => user.id === id);
+    return this.users.find(user => user.id === id);
   }
 
   public async createUser(item: User): Promise<User | undefined> {
     const newUser: User = { ...item, id: ++this.lastIdGenerated };
-    await this.users.push(newUser);
+    this.users.push(newUser);
     return newUser;
   }
 
   public async updateUser(id: number, item: User): Promise<User | undefined> {
-    const userIndex = await this.users.findIndex(user => user.id === id);
+    const userIndex = this.users.findIndex(user => user.id === id);
     if (userIndex === -1) {
       return undefined;
     }
@@ -36,7 +36,7 @@ export class UserRepository implements Repository <User> {
   }
 
   public async deleteUser(id: number): Promise<User | undefined> {
-    const userIndex = await this.users.findIndex(user => user.id === id);
+    const userIndex = this.users.findIndex(user => user.id === id);
     if (userIndex === -1) {
       return undefined;
     }

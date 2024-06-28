@@ -29,35 +29,35 @@ export default class UserController {
       next()
   }
 
-  public getAllUsers = (req: Request, res: Response): void => {
-    const users = this.userService.getUsers();
+  public getAllUsers = async (req: Request, res: Response): Promise<void> => {
+    const users =  await this.userService.getUsers();
     res.json({message:'Listado de Usuarios',users});
   }
 
-  public getUserById = (req: Request, res: Response): void => {
+  public getUserById = async(req: Request, res: Response): Promise<void> => {
     const id = +req.params.id;
-    const result = this.userService.getUser(id);
+    const result = await this.userService.getUser(id);
     res.json(result);
   }
 
-  public createUser = (req: Request, res: Response): void => {
+  public createUser = async (req: Request, res: Response): Promise<void> => {
     const userBody = req.body.sanitizedInput;
     const userInput: User = new User(userBody.Nombre, userBody.Apellido, userBody.Mail, userBody.Clave);
     console.log('user', );
-    const user = this.userService.createUser(userInput);
+    const user = await this.userService.createUser(userInput);
     res.json(user);
   }
 
-  public updateUser = (req: Request, res: Response): void => {
+  public updateUser = async (req: Request, res: Response): Promise<void> => {
     const id = +req.params.id;
     const input = {id, ...req.body.sanitizedInput}
-    const userUpdated = this.userService.putUser(id, input)
+    const userUpdated = await this.userService.putUser(id, input)
     res.json(userUpdated)
   }
 
-  public deleteUser = (req: Request, res: Response): void => {
+  public deleteUser = async (req: Request, res: Response): Promise<void> => {
     const id = +req.params.id;
-    const result = this.userService.deleteUser(id);
+    const result = await this.userService.deleteUser(id);
     res.json(result);
   }
 

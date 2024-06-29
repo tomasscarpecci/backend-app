@@ -19,12 +19,12 @@ export class UserRepository implements Repository <User> {
   }
 
   public async getUserById(id: number): Promise<User | undefined> {
-    return this.usersArray.find(user => user.id === id);
+    return (await users.findOne({id: id}))||undefined;
   }
 
   public async createUser(item: User): Promise<User | undefined> {
     const newUser: User = { ...item, id: ++this.lastIdGenerated };
-    this.usersArray.push(newUser);
+    users.insertOne(newUser);
     return newUser;
   }
 

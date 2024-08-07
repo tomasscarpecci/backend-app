@@ -1,6 +1,6 @@
 import { Repository } from "../shared/repository.js";
 import { User } from "./UserEntity.js";
-
+/*Esta capa era de cuando trabajamos en memoria y no base de datos, la guarde por las dudas pero no le den bola porque no sirve*/
 export class UserRepository implements Repository <User> {
 
   private users: User[] = [

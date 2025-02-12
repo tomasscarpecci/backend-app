@@ -1,6 +1,6 @@
-import { Repository } from "../shared/repository.js";
-import { User } from "./UserEntity.js";
-import { db } from "../shared/db/conn.js";
+import { Repository } from "../shared/repository";
+import { User } from "./User.Entity";
+import { db } from "../shared/db/conn";
 
 const users= db.collection<User>('users');
 
@@ -38,3 +38,7 @@ export class UserRepository implements Repository <User> {
   }
 
 }
+
+/*import { db } from "../shared/db/conn.js";
+
+const users= db.collection<User>('users'); */

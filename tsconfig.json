@@ -7,9 +7,14 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "sourceMap": true  // Habilita la generación de source maps
+    "sourceMap": true,  // Habilita la generación de source maps
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false
 
   },
   "include": ["src"],
   "exclude": ["node_modules"]
+  
+
 }

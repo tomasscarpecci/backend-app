@@ -1,6 +1,6 @@
-import { User } from "./UserEntity";
+import { User } from "./User.Entity";
 import { createHash } from 'crypto';
-import { UserRepository } from "./UserRepository.js";
+import { UserRepository } from "./UserRepository";
 
 
 

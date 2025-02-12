@@ -1,6 +1,9 @@
-import { User } from "./UserEntity.js";
-import { UserService } from "../user/UserService.js";
+import { User } from "./User.Entity";
+import { UserService } from "../user/UserService";
+import { EntityManager } from '@mikro-orm/core';
 import { NextFunction, Request, Response } from 'express';
+import { ObjectId } from '@mikro-orm/mongodb';
+import { Newcategory } from "./Newscategory.Entity";
 
 /*
   En los Controllers se deben utilizar funciones flecha (arrow functions), porque dichas funciones
@@ -11,11 +14,11 @@ import { NextFunction, Request, Response } from 'express';
 
 export default class UserController {
 
-  constructor() {
-    this.userService = new UserService();
-  }
-
-  private userService: UserService;
+    private em: EntityManager;
+      
+        constructor(em: EntityManager) {
+          this.em = em;
+        }
 
   //Middleware para sanetizar las entradas
 
@@ -27,38 +30,73 @@ export default class UserController {
       Clave: req.body.Clave
       }
       next()
-  }
+  };
 
   public getAllUsers = async (req: Request, res: Response): Promise<void> => {
-    const users =  await this.userService.getUsers();
-    res.json({message:'Listado de Usuarios',users});
+    try {
+    const users = await this.em.find(
+      User, {}, { populate: ['newscategory'] }
+    )
+    res.status(200).json({ message: 'found all users', data: users })
+  } catch (error: any) {
+    res.status(500).json({ message: error.message })
   }
+  };
 
-  public getUserById = async(req: Request, res: Response): Promise<void> => {
-    const id = +req.params.id;
-    const result = await this.userService.getUser(id);
-    res.json(result);
-  }
+  public getUserById = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const id = req.params.id;
+        const objectId = new ObjectId(id);
+        const user = await this.em.findOneOrFail(User, { _id: objectId }, { populate: ['newscategory'] });
+        res.status(200).json({ message: 'found user', data: user });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+  };
+
 
   public createUser = async (req: Request, res: Response): Promise<void> => {
-    const userBody = req.body.sanitizedInput;
-    const userInput: User = new User(userBody.Nombre, userBody.Apellido, userBody.Mail, userBody.Clave);
-    console.log('user', );
-    const user = await this.userService.createUser(userInput);
-    res.json(user);
+  try {
+    const { newscategories, ...userData } = req.body.sanitizedInput;
+    const user = this.em.create(User, userData);
+    if (newscategories && newscategories.length > 0) {
+      const categoryIds = newscategories.map((id: string) => new ObjectId(id));
+      const categories = await this.em.find(Newcategory, { _id: { $in: categoryIds } });
+      if (categories.length !== newscategories.length) {
+        res.status(404).json({ message: 'One or more categories not found' });
+        return;
+      }
+      user.newscategory.set(categories);
+    }
+    await this.em.persistAndFlush(user);
+    res.status(201).json({ message: 'User created', data: user });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
   }
+};
 
   public updateUser = async (req: Request, res: Response): Promise<void> => {
-    const id = +req.params.id;
-    const input = {id, ...req.body.sanitizedInput}
-    const userUpdated = await this.userService.putUser(id, input)
-    res.json(userUpdated)
-  }
+    res.status(500).json({message: 'Not implemented'})
+  };
 
   public deleteUser = async (req: Request, res: Response): Promise<void> => {
-    const id = +req.params.id;
-    const result = await this.userService.deleteUser(id);
-    res.json(result);
+  try {
+    const id = req.params.id;
+    const objectId = new ObjectId(id);
+    const user = await this.em.findOne(User, { _id: objectId }, { populate: ['newscategory'] });
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+    await this.em.removeAndFlush(user);
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
   }
+};
+
 
 }
+
+/*const userInput: User = new User(userBody.Nombre, userBody.Apellido, userBody.Mail, userBody.Clave); */

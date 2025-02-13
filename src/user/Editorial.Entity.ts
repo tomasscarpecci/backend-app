@@ -15,7 +15,7 @@ export class Editorial extends BaseEntity {
   @Property({nullable: false})
   razonSocial!: string;
 
-  @OneToMany (()=> New, (news) => news.editorial, { orphanRemoval: true })
+  @OneToMany (()=> New, (news) => news.editorial, { orphanRemoval: true, cascade: [Cascade.REMOVE]})
   news = new Collection <New> (this);
 
 }

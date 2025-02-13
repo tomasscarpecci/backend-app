@@ -55,7 +55,7 @@ export default class EditorialController {
         editorial.news.add(existingNew); 
       }
     }
-    await this.em.persistAndFlush(editorial); // Guardar en la DB
+    await this.em.persistAndFlush(editorial); 
     res.status(201).json({ message: 'Editorial created', data: editorial });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -66,13 +66,16 @@ export default class EditorialController {
   try {
     const id = req.params.id;
     const objectId = new ObjectId(id);
-    const editorial = await this.em.findOne(Editorial, { _id: objectId });
+    const editorial = await this.em.findOne(Editorial, { _id: objectId }, { populate: ['news'] });
     if (!editorial) {
       res.status(404).json({ message: 'Editorial not found' });
       return;
     }
-    if (req.body.news && Array.isArray(req.body.news)) {
-      for (const newsId of req.body.news) {
+    const { news, ...updateData } = req.body;
+    this.em.assign(editorial, updateData);
+    if (news && Array.isArray(news)) {
+      const validNews = [];
+      for (const newsId of news) {
         const newsObjectId = new ObjectId(newsId);
         const existingNew = await this.em.findOne(New, { _id: newsObjectId });
         if (!existingNew) {
@@ -80,13 +83,12 @@ export default class EditorialController {
           return;
         }
         existingNew.editorial = editorial;
-        editorial.news.add(existingNew);
+        validNews.push(existingNew);
       }
+      editorial.news.set(validNews);
     }
-    this.em.assign(editorial, req.body);
     await this.em.flush();
     res.status(200).json({ message: 'Editorial updated', data: editorial });
-    
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -97,14 +99,15 @@ export default class EditorialController {
   try {
     const id = req.params.id;
     const objectId = new ObjectId(id);
-    const editorial = await this.em.findOne(Editorial, { _id: objectId });
+    const editorial = await this.em.findOne(Editorial, { _id: objectId }, { populate: ['news'] });
     if (!editorial) {
       res.status(404).json({ message: 'Editorial not found' });
       return;
     }
+    editorial.news.removeAll(); 
+    await this.em.flush();
     await this.em.removeAndFlush(editorial);
-    res.status(200).json({ message: 'Editorial deleted successfully', data: editorial });
-
+    res.status(200).json({ message: 'Editorial deleted successfully' });
   } catch (error: any) {
     console.error(error);
     res.status(500).json({ message: error.message });

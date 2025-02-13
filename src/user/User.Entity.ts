@@ -17,6 +17,6 @@ export class User extends BaseEntity {
   Clave!: string;
   
   @ManyToMany (() => Newcategory, (newcategory) => newcategory.users, {owner: true,})
-  newscategory = new Collection <Newcategory> (this);
+  newscategories = new Collection <Newcategory> (this);
   
 }

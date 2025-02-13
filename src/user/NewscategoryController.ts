@@ -22,7 +22,7 @@ export default class NewscategoryController {
 
   public getAll = async (req: Request, res: Response): Promise<void> => {
     try {
-      const categories = await this.em.find(Newcategory, {}, {populate:['news']}); // Encuentra todas las categorías
+      const categories = await this.em.find(Newcategory, {}, {populate:['news', 'users']});
       res.json ({message: 'found all categories' ,categories});
     } catch (error) {
       console.error(error);
@@ -34,7 +34,7 @@ export default class NewscategoryController {
     try {
       const id = req.params.id;
       const objectId = new ObjectId(id);
-      const newCategory = await this.em.findOne(Newcategory, { _id: objectId }, { populate: ['news'] });
+      const newCategory = await this.em.findOne(Newcategory, { _id: objectId }, { populate: ['news', 'users'] });
       if (!newCategory) {
         res.status(404).json({ message: 'Category not found' });
         return;
@@ -136,7 +136,7 @@ export default class NewscategoryController {
     newCategory.users.removeAll();
     await this.em.flush();
     await this.em.removeAndFlush(newCategory);
-    res.status(200).json({ message: 'Category New deleted successfully', data: newCategory });
+    res.status(200).json({ message: 'Category New deleted successfully' });
   } catch (error: any) {
     console.error(error);
     res.status(500).json({ message: error.message });
@@ -161,4 +161,6 @@ export default class NewscategoryController {
       res.status(500).json({ message: error.message });
     }
   };
+
+, data: newCategory
   */

@@ -12,7 +12,7 @@ export class Newcategory extends BaseEntity {
   @OneToMany(()=> New, (news) => news.category , { orphanRemoval: true, cascade: [Cascade.ALL] })
   news = new Collection<New> (this)
 
-  @ManyToMany (() => User, (user) => user.newscategory, { cascade: [Cascade.PERSIST, Cascade.MERGE] })
+  @ManyToMany (() => User, (user) => user.newscategories, { cascade: [Cascade.PERSIST, Cascade.MERGE] })
   users = new Collection <User> (this)
 }
 

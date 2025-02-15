@@ -60,15 +60,15 @@ export default class UserController {
     console.log("Request Body:", req.body);
     const { newscategories, ...userData } = req.body;
     const user = this.em.create(User, userData);
-    if (!Array.isArray(newscategories) || newscategories.length === 0) {
-      res.status(400).json({ message: 'newscategories must be a non-empty array' });
+    if (Array.isArray(newscategories) && newscategories.length > 0) {
+      const categoryIds = newscategories.map((id: any) => new ObjectId(id));
+      const categories = await this.em.find(Newcategory, { _id: { $in: categoryIds } });
+      if (categories.length !== newscategories.length) {
+        res.status(404).json({ message: 'One or more categories not found' });
+        return;
+      }
+      user.newscategories.set(categories);
     }
-    const categoryIds = newscategories.map((id:any) => new ObjectId(id));
-    const categories = await this.em.find(Newcategory, { _id: { $in: categoryIds } });
-    if (categories.length !== newscategories.length) {
-      res.status(404).json({ message: 'One or more categories not found' });
-    }
-    user.newscategories.set(categories);
     await this.em.persistAndFlush(user);
     res.status(201).json({ message: 'User created', data: user });
   } catch (error: any) {
@@ -113,4 +113,5 @@ public deleteUser = async (req: Request, res: Response): Promise<void> => {
 
 }
 
-/*const userInput: User = new User(userBody.Nombre, userBody.Apellido, userBody.Mail, userBody.Clave); */
+/*const userInput: User = new User(userBody.Nombre, userBody.Apellido, userBody.Mail, userBody.Clave);
+ */
